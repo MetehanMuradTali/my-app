@@ -8,6 +8,18 @@ import LoginModal from '@/components/LoginModal';
 
 export default function Home() {
 
+  const [windowWidth, setWindowWidth] = useState(0);
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
@@ -27,17 +39,17 @@ export default function Home() {
       <div>
         {/*Navbar*/}
         <nav className={`w-100 navbar sticky-top ${styles["diagonal-bg"]}`}>
-          <div className='container-fluid px-5 py-2'>
+          <div className='container-fluid px-sm-5 py-sm-2'>
             <div className='navbar-brand d-flex flex-row align-items-center gap-3'>
               <Image
                 src="/svg/bvb-logo.svg"
                 alt="Logo"
-                width={60}
-                height={60}
+                width={windowWidth < 600 ? 40 : 60}
+                height={windowWidth < 600 ? 40 : 60}
               />
-              <header className='text-white'>Borussia Dortmund</header>
+              <header className='text-white' style={windowWidth < 600 ? { fontSize: "14px" } : { fontSize: "20px" }}>Borussia Dortmund</header>
             </div>
-            <button className='btn btn-dark' onClick={() => { openModal() }}>Register</button>
+            <button className={`btn  btn-dark ${windowWidth < 600 ? "btn-sm" : ""}`} onClick={() => { openModal() }}>Register</button>
           </div>
           <LoginModal
             isOpen={modalIsOpen}
@@ -45,7 +57,7 @@ export default function Home() {
           />
         </nav>
         {/*Carousel*/}
-        <div className={`d-flex flex-column align-items-center ${styles["bg-dark"]}`} data-bs-ride="carousel" style={{ width: "100%", height: "70vh", paddingRight: "10%", paddingLeft: "10%" }} >
+        <div className={`d-flex flex-column align-items-center w-100 ${styles["bg-dark"]} `} data-bs-ride="carousel" style={windowWidth < 800 ? { height: "40vh" } : { height: "70vh" }} >
           <div id="carouselExampleIndicators" className="carousel slide " style={{ width: "100%", height: "100%" }}>
             <div className="carousel-indicators">
               <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
